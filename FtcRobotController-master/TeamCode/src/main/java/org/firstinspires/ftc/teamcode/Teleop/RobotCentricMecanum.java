@@ -40,16 +40,19 @@ public class RobotCentricMecanum extends LinearOpMode {
         extArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        pivotArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pivotArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
 
         if (isStopRequested()) return;
-        boolean safe_mode = true;
+
         double speedFactor = 1.0;
         boolean yIsPressed = false;
-        boolean aIsPressed = false;
+//        boolean lbIsPressed = false;
         boolean override = false;
 
         while (opModeIsActive()) {
@@ -63,6 +66,8 @@ public class RobotCentricMecanum extends LinearOpMode {
             double frontRightPower = ((y - x - rx) / denominator);
             double backRightPower = ((y + x - rx) / denominator);
 
+            // toggle override for arm limits
+            // note: maybe reset encoder when turning off override or add a different button to reset the encoder
             if(gamepad2.y && !yIsPressed) {
                 yIsPressed = true;
                 override = !override;
@@ -71,6 +76,7 @@ public class RobotCentricMecanum extends LinearOpMode {
                 yIsPressed = false;
             }
 
+            // intake: up = out, down = in
             if(gamepad2.dpad_up) {
                 leftServo.setPower(1);
                 rightServo.setPower(-1);
@@ -82,37 +88,53 @@ public class RobotCentricMecanum extends LinearOpMode {
                 rightServo.setPower(0);
             }
 
-            if(gamepad2.a && !aIsPressed) {
-                aIsPressed = true;
-                if(slideServo.getPosition() == 0) {
-                    slideServo.setPosition(0.9);
-                } else {
-                    slideServo.setPosition(0);
-                }
+//            // bucket (toggle)
+//            if(gamepad1.left_bumper && !lbIsPressed) {
+//                lbIsPressed = true;
+//                if(slideServo.getPosition() == 0) {
+//                    slideServo.setPosition(0.9);
+//                } else {
+//                    slideServo.setPosition(0);
+//                }
+//            }
+//            if(!gamepad1.left_bumper) {
+//                aIsPressed = false;
+//            }
+
+            // bucket: left = down, right = up
+            if(gamepad1.left_bumper) {
+                slideServo.setPosition(0.9);
             }
-            if(!gamepad2.a) {
-                aIsPressed = false;
+            if(gamepad1.right_bumper) {
+                slideServo.setPosition(0);
             }
 
-            pivotArmMotor.setPower(gamepad2.left_stick_y * 0.2);
 
-            if(!(override && (-extArmMotor.getCurrentPosition() < 0 && -armPow < 0 || -extArmMotor.getCurrentPosition() > 850 && -armPow > 0))) {
+            // pivot arm
+            // note: add constant power to prevent flopping from momentum
+            pivotArmMotor.setPower(gamepad2.left_stick_y * 0.3);
+
+            // extension arm with limits
+            // note: add constant power to avoid slipping, adjust limits
+            if(override) {
                 extArmMotor.setPower(gamepad2.right_stick_y * 0.4);
-            } else if(override) {
+            } else if(!(-extArmMotor.getCurrentPosition() < 0 && -armPow < 0 || -extArmMotor.getCurrentPosition() > 850 && -armPow > 0)) {
                 extArmMotor.setPower(gamepad2.right_stick_y * 0.4);
             } else {
                 extArmMotor.setPower(0);
             }
 
+            // drive
             frontLeftMotor.setPower(-frontLeftPower * speedFactor);
             backLeftMotor.setPower(-backLeftPower * speedFactor);
             frontRightMotor.setPower(-frontRightPower * speedFactor);
             backRightMotor.setPower(-backRightPower * speedFactor);
 
-            telemetry.addData("Arm Position", -extArmMotor.getCurrentPosition());
-            telemetry.addData("Arm Power", -armPow);
+            telemetry.addData("extension arm position", -extArmMotor.getCurrentPosition());
+            telemetry.addData("extension arm power", -armPow);
             telemetry.addData("override", override);
-            telemetry.addData("Slide Servo position", slideServo.getPosition());
+            telemetry.addData("slide servo position", slideServo.getPosition());
+            telemetry.addData("pivot arm position", pivotArmMotor.getCurrentPosition());
             telemetry.update();
         }
     }

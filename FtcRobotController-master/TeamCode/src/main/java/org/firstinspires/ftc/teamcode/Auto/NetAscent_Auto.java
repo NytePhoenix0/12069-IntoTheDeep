@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.Auto.BasicPark;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -35,13 +36,15 @@ public class NetAscent_Auto extends LinearOpMode {
                 .forward(10)
                 .strafeLeft(35)
                 .back(20)
-                .lineToLinearHeading(new Pose2d(-30, 0, Math.toRadians(0.1)))
-                .addTemporalMarker(18, () -> {
+                .strafeRight(58)
+                .turn(Math.toRadians(-180))
+                .forward(20)
+                .addTemporalMarker(19, () -> {
                     while(extArmMotor.getCurrentPosition() < 200) {
                         extArmMotor.setPower(0.2);
                     }
                     extArmMotor.setPower(0);
-                }) // extend/lift arm for level 1 ascent
+                })
                 .build();
 
         waitForStart();
