@@ -31,20 +31,20 @@ public class NetAscent_Auto extends LinearOpMode {
         pivotArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
-                .forward(60)
-                .strafeLeft(10)
-                .back(58)
+                .back(60)
+                .strafeRight(10)
                 .forward(58)
-                .strafeLeft(8)
                 .back(58)
-                .forward(30)
+                .strafeRight(8)
+                .forward(58)
+                .back(30)
                 .turn(Math.toRadians(90))
-                .forward(7)
-                .strafeLeft(35)
-                .back(20)
-                .strafeRight(58)
-                .turn(Math.toRadians(-180))
+                .back(7)
+                .strafeRight(35)
                 .forward(20)
+                .strafeLeft(58)
+                .turn(Math.toRadians(-180))
+                .back(20)
                 .addTemporalMarker(19, () -> {
                     while(extArmMotor.getCurrentPosition() < 200) {
                         extArmMotor.setPower(0.2);
