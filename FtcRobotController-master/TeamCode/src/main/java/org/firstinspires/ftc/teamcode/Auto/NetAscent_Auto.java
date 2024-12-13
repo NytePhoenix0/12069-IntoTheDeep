@@ -20,9 +20,15 @@ public class NetAscent_Auto extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         DcMotor extArmMotor = hardwareMap.dcMotor.get("extensionArm");
+        DcMotor pivotArmMotor = hardwareMap.dcMotor.get("pivotArm");
+
         extArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivotArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         extArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pivotArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pivotArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
                 .forward(60)
@@ -31,9 +37,9 @@ public class NetAscent_Auto extends LinearOpMode {
                 .forward(58)
                 .strafeLeft(8)
                 .back(58)
-                .forward(33)
+                .forward(30)
                 .turn(Math.toRadians(90))
-                .forward(10)
+                .forward(7)
                 .strafeLeft(35)
                 .back(20)
                 .strafeRight(58)
@@ -44,6 +50,12 @@ public class NetAscent_Auto extends LinearOpMode {
                         extArmMotor.setPower(0.2);
                     }
                     extArmMotor.setPower(0);
+                })
+                .addTemporalMarker(0, () -> {
+                    while(pivotArmMotor.getCurrentPosition() < 100) {
+                        pivotArmMotor.setPower(0.2);
+                    }
+                    pivotArmMotor.setPower(0);
                 })
                 .build();
 

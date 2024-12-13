@@ -54,6 +54,7 @@ public class RobotCentricMecanum extends LinearOpMode {
         boolean yIsPressed = false;
 //        boolean lbIsPressed = false;
         boolean override = false;
+        int prevPosition = 0;
 
         while (opModeIsActive()) {
             double y = gamepad1.right_stick_y;
@@ -65,6 +66,17 @@ public class RobotCentricMecanum extends LinearOpMode {
             double backLeftPower = ((y - x + rx) / denominator);
             double frontRightPower = ((y - x - rx) / denominator);
             double backRightPower = ((y + x - rx) / denominator);
+            double resist = 0;
+
+            // prevent flopping (maybe)
+            if(pivotArmMotor.getCurrentPosition() - prevPosition > 10) {
+                resist = - 0.1;
+            } else if(pivotArmMotor.getCurrentPosition() - prevPosition < -10) {
+                resist = 0.1;
+            } else {
+                resist = 0;
+            }
+            prevPosition = pivotArmMotor.getCurrentPosition();
 
             // toggle override for arm limits
             // note: maybe reset encoder when turning off override or add a different button to reset the encoder
@@ -74,6 +86,12 @@ public class RobotCentricMecanum extends LinearOpMode {
             }
             if(!gamepad2.y) {
                 yIsPressed = false;
+            }
+
+            // reset extension arm encoder
+            if(gamepad2.right_bumper) {
+                extArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                extArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
             // intake: up = out, down = in
@@ -101,24 +119,26 @@ public class RobotCentricMecanum extends LinearOpMode {
 //                aIsPressed = false;
 //            }
 
+            if(gamepad1.x) {
+                slideServo.setPosition(0.9);
+            }
             // bucket: left = down, right = up
             if(gamepad1.left_bumper) {
-                slideServo.setPosition(0.9);
+                slideServo.setPosition(0.66);
             }
             if(gamepad1.right_bumper) {
                 slideServo.setPosition(0);
             }
 
-
             // pivot arm
             // note: add constant power to prevent flopping from momentum
-            pivotArmMotor.setPower(gamepad2.left_stick_y * 0.3);
+            pivotArmMotor.setPower(gamepad2.left_stick_y * 0.3 + resist);
 
             // extension arm with limits
             // note: add constant power to avoid slipping, adjust limits
             if(override) {
                 extArmMotor.setPower(gamepad2.right_stick_y * 0.4);
-            } else if(!(-extArmMotor.getCurrentPosition() < 0 && -armPow < 0 || -extArmMotor.getCurrentPosition() > 850 && -armPow > 0)) {
+            } else if(!(-extArmMotor.getCurrentPosition() < 0 && -armPow < 0 || -extArmMotor.getCurrentPosition() > 12  && -armPow > 0)) {
                 extArmMotor.setPower(gamepad2.right_stick_y * 0.4);
             } else {
                 extArmMotor.setPower(0);
