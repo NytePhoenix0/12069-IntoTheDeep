@@ -51,14 +51,13 @@ public class RobotCentricMecanum extends LinearOpMode {
         double speedFactor = 1.0;
         boolean override = false;
         boolean yIsPressed = false;
-        boolean ltIsPressed = false;
-        boolean rtIsPressed = false;
+//        boolean ltIsPressed = false;
+//        boolean rtIsPressed = false;
 
         while (opModeIsActive()) {
             double y = gamepad1.right_stick_y;
             double x = -gamepad1.right_stick_x;
             double rx = -gamepad1.left_stick_x;
-            double armPow = gamepad2.right_stick_y;
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = ((y + x - rx) / denominator);
             double backLeftPower = ((y - x - rx) / denominator);
