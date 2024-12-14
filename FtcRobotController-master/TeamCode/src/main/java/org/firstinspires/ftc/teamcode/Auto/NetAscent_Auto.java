@@ -12,7 +12,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+// untested
 @Autonomous(name = "NetAscent_Auto")
+@Disabled
 public class NetAscent_Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,20 +33,20 @@ public class NetAscent_Auto extends LinearOpMode {
         pivotArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
-                .back(60)
-                .strafeRight(10)
-                .forward(58)
+                .forward(60)
+                .strafeLeft(10)
                 .back(58)
-                .strafeRight(8)
                 .forward(58)
-                .back(30)
+                .strafeLeft(8)
+                .back(58)
+                .forward(30)
                 .turn(Math.toRadians(90))
-                .back(7)
-                .strafeRight(35)
-                .forward(20)
-                .strafeLeft(58)
-                .turn(Math.toRadians(-180))
+                .forward(6)
+                .strafeLeft(35)
                 .back(20)
+                .strafeRight(58)
+                .turn(Math.toRadians(-180))
+                .forward(20)
                 .addTemporalMarker(19, () -> {
                     while(extArmMotor.getCurrentPosition() < 200) {
                         extArmMotor.setPower(0.2);

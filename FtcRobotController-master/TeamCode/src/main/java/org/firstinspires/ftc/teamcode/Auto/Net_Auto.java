@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 // untested
-@Autonomous(name = "Park_Auto")
-public class Park_Auto extends LinearOpMode {
+@Autonomous(name = "Net_Auto")
+public class Net_Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -20,7 +20,16 @@ public class Park_Auto extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
-                .strafeRight(48)
+                .forward(60)
+                .strafeLeft(10)
+                .back(58)
+                .forward(58)
+                .strafeLeft(8)
+                .back(58)
+                .forward(30)
+                .turn(Math.toRadians(90))
+                .forward(6)
+                .strafeLeft(35)
                 .build();
 
         waitForStart();
