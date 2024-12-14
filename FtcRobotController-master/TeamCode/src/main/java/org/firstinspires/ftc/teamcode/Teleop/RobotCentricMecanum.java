@@ -152,6 +152,7 @@ public class RobotCentricMecanum extends LinearOpMode {
 
             telemetry.addData("extension arm position", -extArmMotor.getCurrentPosition());
             telemetry.addData("override", override);
+            telemetry.addData("speed factor", speedFactor);
             telemetry.update();
         }
     }
