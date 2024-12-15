@@ -19,17 +19,17 @@ public class NetPark_Auto extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
-                .forward(60)
+                .forward(46)
                 .strafeLeft(10)
-                .back(58)
-                .forward(58)
+                .back(44)
+                .forward(44)
                 .strafeLeft(8)
-                .back(58)
+                .back(44)
                 .forward(30)
                 .turn(Math.toRadians(90))
                 .forward(6)
-                .strafeLeft(35)
-                .back(95)
+                .strafeLeft(32)
+                .back(90)
                 .build();
 
         waitForStart();

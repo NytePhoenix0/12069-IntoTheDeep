@@ -20,7 +20,7 @@ public class Park_Auto extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
-                .strafeRight(48)
+                .strafeRight(47)
                 .build();
 
         waitForStart();

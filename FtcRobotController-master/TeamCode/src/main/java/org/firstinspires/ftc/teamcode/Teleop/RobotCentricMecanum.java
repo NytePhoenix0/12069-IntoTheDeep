@@ -51,8 +51,8 @@ public class RobotCentricMecanum extends LinearOpMode {
         double speedFactor = 1.0;
         boolean override = false;
         boolean yIsPressed = false;
-//        boolean ltIsPressed = false;
-//        boolean rtIsPressed = false;
+        boolean ltIsPressed = false;
+        boolean rtIsPressed = false;
 
         while (opModeIsActive()) {
             double y = gamepad1.right_stick_y;
@@ -93,7 +93,7 @@ public class RobotCentricMecanum extends LinearOpMode {
             // extension arm with limits
             if(override) {
                 extArmMotor.setPower(gamepad2.left_stick_y * 0.7);
-            } else if(!(-extArmMotor.getCurrentPosition() < 0 && -armPow < 0 || -extArmMotor.getCurrentPosition() > 1250  && -armPow > 0)) {
+            } else if(!(-extArmMotor.getCurrentPosition() < 0 && -gamepad2.left_stick_y < 0 || -extArmMotor.getCurrentPosition() > 1300  && -gamepad2.left_stick_y > 0)) {
                 extArmMotor.setPower(gamepad2.left_stick_y * 0.7);
             } else {
                 extArmMotor.setPower(0);
@@ -133,19 +133,19 @@ public class RobotCentricMecanum extends LinearOpMode {
             frontRightMotor.setPower(-frontRightPower * speedFactor);
             backRightMotor.setPower(-backRightPower * speedFactor);
 
-//            // drive gears - untested
-//            if(gamepad1.left_trigger > 0.5 && speedFactor > 0.2 && !ltIsPressed) {
+            // drive gears - untested
+            if(gamepad1.dpad_down /* && speedFactor > 0.2 && !ltIsPressed */) {
 //                ltIsPressed = true;
-//                speedFactor -= 0.1;
-//            }
-//            if(!(gamepad1.left_trigger > 0.5)) {
+                speedFactor = 0.3;
+            }
+//            if(!(gamepad1.dpad_down)) {
 //                ltIsPressed = false;
 //            }
-//            if(gamepad1.right_trigger > 0.5 && speedFactor < 1 && !rtIsPressed) {
+            if(gamepad1.dpad_up /* && speedFactor < 1 && ! */) {
 //                rtIsPressed = true;
-//                speedFactor += 0.1;
-//            }
-//            if(!(gamepad1.right_trigger > 0.5)) {
+                speedFactor = 1;
+            }
+//            if(!(gamepad1.dpad_up)) {
 //                rtIsPressed = false;
 //            }
 
