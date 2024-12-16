@@ -29,7 +29,7 @@ public class NetPark_Auto extends LinearOpMode {
                 .turn(Math.toRadians(90))
                 .forward(6)
                 .strafeLeft(32)
-                .back(90)
+                .back(115)
                 .build();
 
         waitForStart();

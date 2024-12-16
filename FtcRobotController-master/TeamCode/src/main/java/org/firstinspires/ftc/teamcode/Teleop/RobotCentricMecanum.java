@@ -136,7 +136,7 @@ public class RobotCentricMecanum extends LinearOpMode {
             // drive gears - untested
             if(gamepad1.dpad_down /* && speedFactor > 0.2 && !ltIsPressed */) {
 //                ltIsPressed = true;
-                speedFactor = 0.3;
+                speedFactor = 0.5;
             }
 //            if(!(gamepad1.dpad_down)) {
 //                ltIsPressed = false;
